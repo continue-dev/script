@@ -19,6 +19,26 @@ class GameScene: SKScene {
         do {
             let script = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
 
+            
+            var nextRange0 = script.startIndex..<script.endIndex //最初は文字列全体から探す
+            while let begin0 = script.range(of: "\n", options: .caseInsensitive, range: nextRange0) {
+                
+                nextRange0 = begin0.upperBound..<script.endIndex
+                guard let end0 = script.range(of: "()", options: .caseInsensitive, range: nextRange0) else {break}
+                                
+                let funcRange = begin0.upperBound..<end0.lowerBound
+                var function = script[funcRange]
+
+                while let range = function.range(of: "\n") {
+                    function.replaceSubrange(range, with: "")
+                }
+                while let range = function.range(of: "}") {
+                    function.replaceSubrange(range, with: "")
+                }
+
+                print(function)
+                nextRange0 = end0.upperBound..<script.endIndex
+            }
 
             guard let begin1 = script.range(of: "var") else {return}
             guard let end1 = script.range(of: "=") else {return}
@@ -28,38 +48,22 @@ class GameScene: SKScene {
             while let range = variable.range(of: " ") {
                 variable.replaceSubrange(range, with: "")
             }
-//            print(variable)     // 青い花
-
-            
-            
-//            print("@" + variable + "@")
-
 
             guard let begin = script.range(of: "\"") else {return}
             let nextRange = begin.upperBound..<script.endIndex
             guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
             let wordRange = begin.upperBound..<end.lowerBound
 
-
-//            print(script[wordRange])
-//
-            
-            
             
             guard let begin3 = script.range(of: "print(") else {return}
-            guard let end3 = script.range(of: ")") else {return}
+            let nextRange3 = begin.upperBound..<script.endIndex
+            guard let end3 = script.range(of: ")", options: .caseInsensitive, range: nextRange3) else {return}
             let printRange = begin3.upperBound..<end3.lowerBound
             let print1 = script[printRange]
-
-//            while let range = variable.range(of: " ") {
-//                variable.replaceSubrange(range, with: "")
-//            }
             
             if print1 == variable {
                 print(script[wordRange])
             }
-//            print(print1)     // 青い花
-
             
             
             
