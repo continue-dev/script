@@ -1,0 +1,2 @@
+var testtest112 = "Hello Yoshiki !"
+print(testtest112)
