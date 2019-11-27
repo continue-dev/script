@@ -1,17 +1,21 @@
 
-initialize() {
-
-}
-
-loop() {
-
-}
-
-finalize() {
-
-}
-
-main() {
+func initialize() {
   var str = "hello"
   print(str)
+}
+
+func loop() {
+  var str = "play game..."
+  print(str)
+}
+
+func finalize() {
+  var str = "good bye"
+  print(str)
+}
+
+func main() {
+  initialize()
+  loop()
+  finalize()
 }

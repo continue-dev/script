@@ -13,59 +13,93 @@ class GameScene: SKScene {
     
     private var label : SKLabelNode?
     private var spinnyNode : SKShapeNode?
+    private var funcArray : [String] = []
+    private var funcScript : [String] = []
     
+    func routine(script:String) {
+        guard let begin1 = script.range(of: "var") else {return}
+        guard let end1 = script.range(of: "=") else {return}
+        let varRange = begin1.upperBound..<end1.lowerBound
+        var variable = script[varRange]
+
+        while let range = variable.range(of: " ") {
+            variable.replaceSubrange(range, with: "")
+        }
+
+        guard let begin = script.range(of: "\"") else {return}
+        let nextRange = begin.upperBound..<script.endIndex
+        guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
+        let wordRange = begin.upperBound..<end.lowerBound
+
+        
+        guard let begin3 = script.range(of: "print(") else {return}
+        let nextRange3 = begin.upperBound..<script.endIndex
+        guard let end3 = script.range(of: ")", options: .caseInsensitive, range: nextRange3) else {return}
+        let printRange = begin3.upperBound..<end3.lowerBound
+        let print1 = script[printRange]
+        
+        if print1 == variable {
+            print(script[wordRange])
+        }
+
+    }
     override func didMove(to view: SKView) {
         guard let path = Bundle.main.path(forResource: "script", ofType: "jump") else {return}
         do {
             let script = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
-
             
             var nextRange0 = script.startIndex..<script.endIndex //最初は文字列全体から探す
-            while let begin0 = script.range(of: "\n", options: .caseInsensitive, range: nextRange0) {
+            while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
                 
                 nextRange0 = begin0.upperBound..<script.endIndex
                 guard let end0 = script.range(of: "()", options: .caseInsensitive, range: nextRange0) else {break}
-                                
+                
                 let funcRange = begin0.upperBound..<end0.lowerBound
                 var function = script[funcRange]
 
-                while let range = function.range(of: "\n") {
-                    function.replaceSubrange(range, with: "")
-                }
-                while let range = function.range(of: "}") {
+                while let range = function.range(of: " ") {
                     function.replaceSubrange(range, with: "")
                 }
 
-                print(function)
+                funcArray.append(function.description)
+                
                 nextRange0 = end0.upperBound..<script.endIndex
+                
+                guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
+                guard let bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
+                let bracketRange = bracket0.upperBound..<bracket1.lowerBound
+
+                funcScript.append(script[bracketRange].description)
             }
 
-            guard let begin1 = script.range(of: "var") else {return}
-            guard let end1 = script.range(of: "=") else {return}
-            let varRange = begin1.upperBound..<end1.lowerBound
-            var variable = script[varRange]
 
-            while let range = variable.range(of: " ") {
-                variable.replaceSubrange(range, with: "")
+            var funcWords:[String] = []
+            for i in 0..<funcScript.count {
+                var nextRange1 = funcScript[i].startIndex..<funcScript[i].endIndex
+                var begin1 = funcScript[i].startIndex
+                while let end1 = funcScript[i].range(of: "()", options: .caseInsensitive, range: nextRange1 ) {
+                    let funcRange = begin1..<end1.lowerBound
+                    var funcWord = funcScript[i][funcRange]
+                    while let range = funcWord.range(of: "\n") {
+                        funcWord.replaceSubrange(range, with: "")
+                    }
+                    while let range = funcWord.range(of: " ") {
+                        funcWord.replaceSubrange(range, with: "")
+                    }
+                    funcWords.append(funcWord.description)
+
+                    nextRange1 = end1.upperBound..<funcScript[i].endIndex
+                    begin1 = end1.upperBound
+                }
+            }
+            for funcWord in funcWords {
+                for j in 0..<funcArray.count {
+                    if funcWord == funcArray[j] {
+                        routine(script: funcScript[j])
+                    }
+                }
             }
 
-            guard let begin = script.range(of: "\"") else {return}
-            let nextRange = begin.upperBound..<script.endIndex
-            guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
-            let wordRange = begin.upperBound..<end.lowerBound
-
-            
-            guard let begin3 = script.range(of: "print(") else {return}
-            let nextRange3 = begin.upperBound..<script.endIndex
-            guard let end3 = script.range(of: ")", options: .caseInsensitive, range: nextRange3) else {return}
-            let printRange = begin3.upperBound..<end3.lowerBound
-            let print1 = script[printRange]
-            
-            if print1 == variable {
-                print(script[wordRange])
-            }
-            
-            
             
             
         } catch let error as NSError {
