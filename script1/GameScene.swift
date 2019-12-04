@@ -17,29 +17,56 @@ class GameScene: SKScene {
     private var funcScript : [String] = []
     
     func routine(script:String) {
-        guard let begin1 = script.range(of: "var") else {return}
-        guard let end1 = script.range(of: "=") else {return}
-        let varRange = begin1.upperBound..<end1.lowerBound
-        var variable = script[varRange]
+        var varArray: [Substring] = []
+        var valArray: [Substring] = []
+        
+        var begin010 = script.startIndex
+        while let begin01 = script.range(of: "var", options: .caseInsensitive, range: begin010..<script.endIndex) {
+            guard let end1 = script.range(of: "=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {return}
+            let varRange = begin01.upperBound..<end1.lowerBound
+            var variable = script[varRange]
 
-        while let range = variable.range(of: " ") {
-            variable.replaceSubrange(range, with: "")
+            while let range = variable.range(of: " ") {
+                variable.replaceSubrange(range, with: "")
+            }
+            varArray.append(variable)
+            
+            guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return}
+            let valRange = end1.upperBound..<nl1.lowerBound
+            var value = script[valRange]
+            while let range = value.range(of: " ") {
+                value.replaceSubrange(range, with: "")
+            }
+            while let range = value.range(of: "\"") {
+                value.replaceSubrange(range, with: "")
+            }
+            valArray.append(value)
+            begin010 = nl1.upperBound
         }
-
-        guard let begin = script.range(of: "\"") else {return}
-        let nextRange = begin.upperBound..<script.endIndex
-        guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
-        let wordRange = begin.upperBound..<end.lowerBound
-
         
-        guard let begin3 = script.range(of: "print(") else {return}
-        let nextRange3 = begin.upperBound..<script.endIndex
-        guard let end3 = script.range(of: ")", options: .caseInsensitive, range: nextRange3) else {return}
-        let printRange = begin3.upperBound..<end3.lowerBound
-        let print1 = script[printRange]
-        
-        if print1 == variable {
+        var begin020 = script.startIndex
+        while let begin = script.range(of: "print(\"", options: .caseInsensitive, range: begin020..<script.endIndex) {
+            let nextRange = begin.upperBound..<script.endIndex
+            guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
+            let wordRange = begin.upperBound..<end.lowerBound
+            begin020 = end.upperBound
             print(script[wordRange])
+        }
+        
+        var begin030 = script.startIndex
+        while let begin3 = script.range(of: "print(", options: .caseInsensitive, range: begin030..<script.endIndex) {
+            let nextRange3 = begin3.upperBound..<script.endIndex
+            guard let end3 = script.range(of: ")", options: .caseInsensitive, range: nextRange3) else {return}
+            let printRange = begin3.upperBound..<end3.lowerBound
+            let print1 = script[printRange]
+            
+            for i in 0..<varArray.count {
+                if print1 == varArray[i] {
+                    print(valArray[i])
+                }
+            }
+            
+            begin030 = end3.upperBound
         }
 
     }

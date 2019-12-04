@@ -2,6 +2,10 @@
 func initialize() {
   var str = "hello"
   print(str)
+  print("direct!")
+  var str2 = "hello22"
+  print(str2)
+
 }
 
 func loop() {
