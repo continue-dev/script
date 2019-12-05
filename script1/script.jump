@@ -19,8 +19,21 @@ func finalize() {
   loop()
 }
 
+func test(arg1) {
+  print(arg1)
+}
+
+func onTouchDown(p) {
+  print(p)
+}
+
+func jumpToHostLanguage() {
+  jump 98765
+}
+
 func main() {
   initialize()
   loop()
   finalize()
+  test("abcd")
 }
