@@ -16,7 +16,45 @@ class GameScene: SKScene {
     private var funcArray : [String] = []
     private var funcScript : [String] = []
     
+    func searchFunc(script: String) {
+        var nextRange0 = script.startIndex..<script.endIndex
+        while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
+            
+            nextRange0 = begin0.upperBound..<script.endIndex
+            guard let end0 = script.range(of: "()", options: .caseInsensitive, range: nextRange0) else {break}
+            
+            let funcRange = begin0.upperBound..<end0.lowerBound
+            var function = script[funcRange]
+
+            while let range = function.range(of: " ") {
+                function.replaceSubrange(range, with: "")
+            }
+
+            funcArray.append(function.description)
+            
+            nextRange0 = end0.upperBound..<script.endIndex
+            
+            guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
+            guard let bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
+            let bracketRange = bracket0.upperBound..<bracket1.lowerBound
+
+            funcScript.append(script[bracketRange].description)
+        }
+
+    }
+    func funcParse(script:String) {
+        var nextRange1 = script.startIndex..<script.endIndex
+        for i in 0..<funcArray.count {
+            while let end1 = script.range(of: funcArray[i] + "()", options: .caseInsensitive, range: nextRange1 ) {
+                routine(script: funcScript[i])
+                nextRange1 = end1.upperBound..<script.endIndex
+            }
+        }
+
+    }
     func routine(script:String) {
+        funcParse(script: script)
+
         var varArray: [Substring] = []
         var valArray: [Substring] = []
         
@@ -75,59 +113,13 @@ class GameScene: SKScene {
         do {
             let script = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
             
-            var nextRange0 = script.startIndex..<script.endIndex //最初は文字列全体から探す
-            while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
-                
-                nextRange0 = begin0.upperBound..<script.endIndex
-                guard let end0 = script.range(of: "()", options: .caseInsensitive, range: nextRange0) else {break}
-                
-                let funcRange = begin0.upperBound..<end0.lowerBound
-                var function = script[funcRange]
+            searchFunc(script: script)
 
-                while let range = function.range(of: " ") {
-                    function.replaceSubrange(range, with: "")
-                }
-
-                funcArray.append(function.description)
-                
-                nextRange0 = end0.upperBound..<script.endIndex
-                
-                guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
-                guard let bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
-                let bracketRange = bracket0.upperBound..<bracket1.lowerBound
-
-                funcScript.append(script[bracketRange].description)
-            }
-
-
-            var funcWords:[String] = []
-            for i in 0..<funcScript.count {
-                var nextRange1 = funcScript[i].startIndex..<funcScript[i].endIndex
-                var begin1 = funcScript[i].startIndex
-                while let end1 = funcScript[i].range(of: "()", options: .caseInsensitive, range: nextRange1 ) {
-                    let funcRange = begin1..<end1.lowerBound
-                    var funcWord = funcScript[i][funcRange]
-                    while let range = funcWord.range(of: "\n") {
-                        funcWord.replaceSubrange(range, with: "")
-                    }
-                    while let range = funcWord.range(of: " ") {
-                        funcWord.replaceSubrange(range, with: "")
-                    }
-                    funcWords.append(funcWord.description)
-
-                    nextRange1 = end1.upperBound..<funcScript[i].endIndex
-                    begin1 = end1.upperBound
+            for i in 0..<funcArray.count {
+                if funcArray[i] == "main" {
+                    funcParse(script: funcScript[i])
                 }
             }
-            for funcWord in funcWords {
-                for j in 0..<funcArray.count {
-                    if funcWord == funcArray[j] {
-                        routine(script: funcScript[j])
-                    }
-                }
-            }
-
-            
             
         } catch let error as NSError {
             print("エラー: \(error)")

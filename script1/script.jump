@@ -16,6 +16,7 @@ func loop() {
 func finalize() {
   var str = "good bye"
   print(str)
+  loop()
 }
 
 func main() {
