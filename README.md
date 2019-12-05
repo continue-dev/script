@@ -1,12 +1,15 @@
-# script
+# script Rabbit
 swift上で動かすscript言語のコンパイラを作るプロジェクトです。  
 scriptの拡張子は.jumpにすることに仮決めしてます。  
-GameScene.swiftの18行目から仮でパーサーを書いています。  
+Rabbitクラスにscript.jumpファイルを読み込ませてrunさせます。  
 ## 現状
 ・メソッド名を識別するところ  
 ・変数名を識別するところ  
 ・print()メソッドでデバッグ表示するところ  
+・SwiftからonTouchDown()で値を送信  
+・scriptからjumpToHostLanguage()で値を受信  
 ## 次の課題
+・引数を複数設定出来るようにする  
 ・メソッドの中身をパースするのと実行を分ける  
 ・クラスを作れるようにする  
 ## contributors募集中
