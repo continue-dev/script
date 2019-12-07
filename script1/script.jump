@@ -23,6 +23,11 @@ func test(arg1) {
   print(arg1)
 }
 
+func test2(arg21, arg22) {
+  print(arg21)
+  print(arg22)
+}
+
 func onTouchDown(p) {
   print(p)
 }
@@ -36,4 +41,5 @@ func main() {
   loop()
   finalize()
   test("abcd")
+  test2(123, "xyz")
 }

@@ -8,10 +8,21 @@
 
 import Foundation
 
+class Func {
+    var function : String
+    var argument : [String]
+    var argumentValue : [String]
+    var script : String
+    init() {
+        function = ""
+        argument = []
+        argumentValue = []
+        script = ""
+    }
+}
+
 class Rabbit {
-    private var funcArray : [String] = []
-    private var funcScript : [String] = []
-    private var argumentArray : [String] = []
+    private var funcArray : [Func] = []
 
     func run(script: String) {
         guard let path = Bundle.main.path(forResource: script, ofType: "jump") else {return}
@@ -21,8 +32,8 @@ class Rabbit {
             searchFunc(script: script)
 
             for i in 0..<funcArray.count {
-                if funcArray[i] == "main" {
-                    funcParse(script: funcScript[i])
+                if funcArray[i].function == "main" {
+                    funcParse(script: funcArray[i].script)
                 }
             }
             
@@ -33,15 +44,17 @@ class Rabbit {
     }
     func onTouchDown(p: Float) {
         for i in 0..<funcArray.count {
-            if funcArray[i] == "onTouchDown" {
-                routine(argument: p.description, script: funcScript[i])
+            if funcArray[i].function == "onTouchDown" {
+                let func0: Func = funcArray[i]
+                func0.argumentValue.append(p.description)
+                routine(func0: func0)
             }
         }
     }
     func falls() {
         for i in 0..<funcArray.count {
-            if funcArray[i] == "jumpToHostLanguage" {
-                print(funcScript[i])
+            if funcArray[i].function == "jumpToHostLanguage" {
+                print(funcArray[i].script)
             }
         }
     }
@@ -59,48 +72,94 @@ class Rabbit {
                 function.replaceSubrange(range, with: "")
             }
 
-            funcArray.append(function.description)
+            let func0: Func = Func()
+            func0.function = function.description
 
             nextRange0 = end0.upperBound..<script.endIndex
 
             guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: nextRange0) else {break}
             let argumentRange = end0.upperBound..<closeBracket.lowerBound
-            var argument = script[argumentRange]
+            let argument = script[argumentRange]
             
-            argumentArray.append(argument.description)
-                
+            var argumnetBegin = argument.startIndex
+            var flag: Bool = true
+            while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
+                let argument0 = argumnetBegin..<argumentEnd.lowerBound
+                var argument00 = argument[argument0]
+                while let range = argument00.range(of: " ") {
+                    argument00.replaceSubrange(range, with: "")
+                }
+                func0.argument.append(argument00.description)
+                argumnetBegin = argumentEnd.upperBound
+                flag = false
+            }
+
+            if flag == true {
+                func0.argument.append(argument.description)
+            } else {
+                var arg = argument[argumnetBegin..<argument.endIndex]
+                while let range = arg.range(of: " ") {
+                   arg.replaceSubrange(range, with: "")
+                }
+                func0.argument.append(arg.description)
+            }
 
             guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
             guard let bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
             let bracketRange = bracket0.upperBound..<bracket1.lowerBound
 
-            funcScript.append(script[bracketRange].description)
+            func0.script = script[bracketRange].description
+            
+            funcArray.append(func0)
         }
 
     }
     func funcParse(script:String) {
         var nextRange1 = script.startIndex..<script.endIndex
         for i in 0..<funcArray.count {
-            while let end1 = script.range(of: funcArray[i] + "(", options: .caseInsensitive, range: nextRange1 ) {
+            while let end1 = script.range(of: funcArray[i].function + "(", options: .caseInsensitive, range: nextRange1 ) {
                 guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {break}
                 let argumentRange = end1.upperBound..<closeBracket.lowerBound
-                var argument = script[argumentRange].description
+                var argument = script[argumentRange]
                 
-                while let range = argument.range(of: " ") {
-                    argument.replaceSubrange(range, with: "")
+                var argumnetBegin = argument.startIndex
+                var flag: Bool = true
+                while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
+                    let argument0 = argumnetBegin..<argumentEnd.lowerBound
+                    var argument00 = argument[argument0]
+                    while let range = argument00.range(of: " ") {
+                        argument00.replaceSubrange(range, with: "")
+                    }
+
+                    funcArray[i].argumentValue.append(argument00.description)
+                    argumnetBegin = argumentEnd.upperBound
+                    flag = false
                 }
                 while let range = argument.range(of: "\"") {
                     argument.replaceSubrange(range, with: "")
                 }
+                if flag == true {
+                    funcArray[i].argumentValue.append(argument.description)
+                } else {
+                    var arg = argument[argumnetBegin..<argument.endIndex]
+                    while let range = arg.range(of: " ") {
+                       arg.replaceSubrange(range, with: "")
+                    }
+                    funcArray[i].argumentValue.append(arg.description)
+                }
+//                while let range = argument.range(of: " ") {
+//                    argument.replaceSubrange(range, with: "")
+//                }
 
-                
-                routine(argument: argument, script: funcScript[i])
+//                funcArray[i].argumentValue.append(argument)
+                routine(func0: funcArray[i])
                 nextRange1 = argumentRange.upperBound..<script.endIndex
             }
         }
 
     }
-    func routine(argument: String, script:String) {
+    func routine(func0: Func) {
+        let script = func0.script
         funcParse(script: script)
 
         var varArray: [Substring] = []
@@ -151,9 +210,9 @@ class Rabbit {
                     print(valArray[i])
                 }
             }
-            for i in 0..<argumentArray.count {
-                if print1 == argumentArray[i] {
-                    print(argument)
+            for i in 0..<func0.argument.count {
+                if print1 == func0.argument[i] && func0.argument[i] != "" {
+                    print(func0.argumentValue[i])
                 }
             }
 
