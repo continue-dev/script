@@ -9,7 +9,6 @@ Rabbitクラスにscript.jumpファイルを読み込ませてrunさせます。
 ・SwiftからonTouchDown()で値を送信  
 ・scriptからjumpToHostLanguage()で値を受信  
 ## 次の課題
-・引数を複数設定出来るようにする  
 ・メソッドの中身をパースするのと実行を分ける  
 ・クラスを作れるようにする  
 ## contributors募集中
