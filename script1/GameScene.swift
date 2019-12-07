@@ -43,7 +43,7 @@ class GameScene: SKScene {
     
     func touchDown(atPoint pos : CGPoint) {
         if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            rabbit.onTouchDown(p: Float( pos.x ))
+            rabbit.onTouchDown(x: Float( pos.x ), y: Float( pos.y ))
             rabbit.falls()
             n.position = pos
             n.strokeColor = SKColor.green

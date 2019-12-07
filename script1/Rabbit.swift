@@ -42,11 +42,17 @@ class Rabbit {
             return
         }
     }
-    func onTouchDown(p: Float) {
+    func onTouchDown(x: Float, y: Float) {
         for i in 0..<funcArray.count {
             if funcArray[i].function == "onTouchDown" {
                 let func0: Func = funcArray[i]
-                func0.argumentValue.append(p.description)
+                if func0.argumentValue.count > 0 {
+                    func0.argumentValue[0] = x.description
+                    func0.argumentValue[1] = y.description
+                } else {
+                    func0.argumentValue.append(x.description)
+                    func0.argumentValue.append(y.description)
+                }
                 routine(func0: func0)
             }
         }

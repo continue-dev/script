@@ -28,8 +28,9 @@ func test2(arg21, arg22) {
   print(arg22)
 }
 
-func onTouchDown(p) {
-  print(p)
+func onTouchDown(x,y) {
+  print(x)
+  print(y)
 }
 
 func jumpToHostLanguage() {
