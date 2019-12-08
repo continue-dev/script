@@ -13,11 +13,13 @@ class Func {
     var argument : [String]
     var argumentValue : [String]
     var script : String
+    var returnValue: String
     init() {
         function = ""
         argument = []
         argumentValue = []
         script = ""
+        returnValue = ""
     }
 }
 
@@ -170,6 +172,21 @@ class Rabbit {
                 routine(func0: funcArray[i])
                 nextRange1 = argumentRange.upperBound..<script.endIndex
             }
+            
+            var nextRange2 = script.startIndex..<script.endIndex
+            while let end2 = script.range(of: "return", options: .caseInsensitive, range: nextRange2) {
+                guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {break}
+                let returnRange = end2.upperBound..<closeNL.lowerBound
+                var returnValue = script[returnRange]
+                while let range = returnValue.range(of: " ") {
+                   returnValue.replaceSubrange(range, with: "")
+                }
+                while let range = returnValue.range(of: "\"") {
+                   returnValue.replaceSubrange(range, with: "")
+                }
+                funcArray[i].returnValue = returnValue.description
+                nextRange2 = closeNL.upperBound..<script.endIndex
+            }
         }
     }
     
@@ -231,6 +248,11 @@ class Rabbit {
             for i in 0..<func0.argument.count {
                 if print1 == func0.argument[i] && func0.argument[i] != "" {
                     print(func0.argumentValue[i])
+                }
+            }
+            for i in 0..<funcArray.count {
+                if print1 == (funcArray[i].function + "(") {
+                    print(funcArray[i].returnValue)
                 }
             }
 

@@ -11,12 +11,13 @@ func initialize() {
 func loop() {
   var str = "play game..."
   print(str)
+  return 777
 }
 
 func finalize() {
   var str = "good bye"
   print(str)
-  loop()
+  print(loop())
 }
 
 func test(arg1) {
