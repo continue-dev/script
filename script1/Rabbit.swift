@@ -64,13 +64,18 @@ class Rabbit {
             }
         }
     }
+    
+    // ================================
+    // 関数の宣言を検索
+    // ================================
     func searchFunc(script: String) {
         var nextRange0 = script.startIndex..<script.endIndex
+        // scriptの中からfuncを検索
         while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
-
             nextRange0 = begin0.upperBound..<script.endIndex
+            // funcの後ろに "(" があるか検索
             guard let end0 = script.range(of: "(", options: .caseInsensitive, range: nextRange0) else {break}
-
+            // funcと(の間にある文字列が関数名になる
             let funcRange = begin0.upperBound..<end0.lowerBound
             var function = script[funcRange]
 
@@ -82,14 +87,16 @@ class Rabbit {
             func0.function = function.description
 
             nextRange0 = end0.upperBound..<script.endIndex
-
+            // "(" の後ろに ")" があるか検索
             guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: nextRange0) else {break}
+            // "(" と ")" の間にある文字列が引数になる
             let argumentRange = end0.upperBound..<closeBracket.lowerBound
             let argument = script[argumentRange]
-            
             var argumnetBegin = argument.startIndex
             var flag: Bool = true
+            // 引数の中で "," があるか検索
             while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
+                // "," があれば引数の１つとしてFuncクラスの引数配列に登録
                 let argument0 = argumnetBegin..<argumentEnd.lowerBound
                 var argument00 = argument[argument0]
                 while let range = argument00.range(of: " ") {
@@ -99,7 +106,6 @@ class Rabbit {
                 argumnetBegin = argumentEnd.upperBound
                 flag = false
             }
-
             if flag == true {
                 func0.argument.append(argument.description)
             } else {
@@ -109,7 +115,7 @@ class Rabbit {
                 }
                 func0.argument.append(arg.description)
             }
-
+            // 関数の中身を取得
             guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
             guard let bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
             let bracketRange = bracket0.upperBound..<bracket1.lowerBound
@@ -120,23 +126,30 @@ class Rabbit {
         }
 
     }
+
+    // ================================
+    // 関数の中身を解析
+    // ================================
     func funcParse(script:String) {
         var nextRange1 = script.startIndex..<script.endIndex
         for i in 0..<funcArray.count {
+            // 関数のスクリプトの中身に 関数名と"(" があるか検索
             while let end1 = script.range(of: funcArray[i].function + "(", options: .caseInsensitive, range: nextRange1 ) {
+                // 関数名と"("があった場合、 ")"を検索
                 guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {break}
+                // "("と")"の間にあった文字列が引数になる
                 let argumentRange = end1.upperBound..<closeBracket.lowerBound
                 var argument = script[argumentRange]
-                
                 var argumnetBegin = argument.startIndex
                 var flag: Bool = true
+                // 引数の文字列の中に","があるか検索
                 while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
+                    // ","があれば引数の１つとしてFuncクラスの引数の値の配列に登録
                     let argument0 = argumnetBegin..<argumentEnd.lowerBound
                     var argument00 = argument[argument0]
                     while let range = argument00.range(of: " ") {
                         argument00.replaceSubrange(range, with: "")
                     }
-
                     funcArray[i].argumentValue.append(argument00.description)
                     argumnetBegin = argumentEnd.upperBound
                     flag = false
@@ -153,17 +166,16 @@ class Rabbit {
                     }
                     funcArray[i].argumentValue.append(arg.description)
                 }
-//                while let range = argument.range(of: " ") {
-//                    argument.replaceSubrange(range, with: "")
-//                }
-
-//                funcArray[i].argumentValue.append(argument)
+                // 関数を実行
                 routine(func0: funcArray[i])
                 nextRange1 = argumentRange.upperBound..<script.endIndex
             }
         }
-
     }
+    
+    // ================================
+    // 関数を実行
+    // ================================
     func routine(func0: Func) {
         let script = func0.script
         funcParse(script: script)
