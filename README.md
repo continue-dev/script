@@ -5,7 +5,7 @@ Rabbitクラスにscript.jumpファイルを読み込ませてrunさせます。
 ## 現状
 ・メソッド名を識別出来る  
 ・変数名を識別出来る  
-・引数を識別出来る
+・引数を識別出来る  
 ・print()メソッドでデバッグ表示出来る  
 ・SwiftからonTouchDown()で値を送信  
 ・scriptからjumpToHostLanguage()で値を受信  
