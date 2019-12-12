@@ -25,8 +25,11 @@ func test(arg1) {
 }
 
 func test2(arg21, arg22) {
-  print(arg21)
-  print(arg22)
+  if (arg21 == 1234) {
+    print(arg21)
+  } else {
+    print(arg22)
+  }
 }
 
 func onTouchDown(x,y) {

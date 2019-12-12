@@ -14,12 +14,14 @@ class Func {
     var argumentValue : [String]
     var script : String
     var returnValue: String
+    var ifScript: String
     init() {
         function = ""
         argument = []
         argumentValue = []
         script = ""
         returnValue = ""
+        ifScript = ""
     }
 }
 
@@ -76,7 +78,7 @@ class Rabbit {
         while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
             nextRange0 = begin0.upperBound..<script.endIndex
             // funcの後ろに "(" があるか検索
-            guard let end0 = script.range(of: "(", options: .caseInsensitive, range: nextRange0) else {break}
+            guard var end0 = script.range(of: "(", options: .caseInsensitive, range: nextRange0) else {break}
             // funcと(の間にある文字列が関数名になる
             let funcRange = begin0.upperBound..<end0.lowerBound
             var function = script[funcRange]
@@ -119,14 +121,42 @@ class Rabbit {
             }
             // 関数の中身を取得
             guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
-            guard let bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
-            let bracketRange = bracket0.upperBound..<bracket1.lowerBound
+//            guard var bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
+//            var bracket00 = bracket0
 
+            var bracket1 = end0
+            var count = 0
+            while count >= 0 {
+//                let bracket2 = script.range(of: "{", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) {
+//                end0 = bracket2
+//                bracket0 = end0
+//                count += 1
+                
+                guard let bracket31 = script.range(of: "{", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
+                guard let bracket32 = script.range(of: "}", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
+                if bracket31.upperBound < bracket32.upperBound {
+                    count += 1
+                    end0 = bracket31
+                    bracket1 = end0
+                } else {
+                    count -= 1
+                    end0 = bracket32
+                    bracket1 = end0
+                }
+//                print("count:" + count.description)
+
+                if count <= 0 {
+                    break
+                }
+            }
+            if count >= 1 {
+                guard let bracket32 = script.range(of: "}", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
+                bracket1 = bracket32
+            }
+            let bracketRange = bracket0.upperBound..<bracket1.lowerBound
             func0.script = script[bracketRange].description
-            
             funcArray.append(func0)
         }
-
     }
 
     // ================================
@@ -199,6 +229,131 @@ class Rabbit {
 
         var varArray: [Substring] = []
         var valArray: [Substring] = []
+        
+        var nextRange1 = script.startIndex..<script.endIndex
+        while let end3 = script.range(of: "if", options: .caseInsensitive, range: nextRange1 ) {
+            guard let openBracket = script.range(of: "(", options: .caseInsensitive, range: end3.upperBound..<script.endIndex) else {break}
+            guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: openBracket.upperBound..<script.endIndex) else {break}
+            let evaluationRange = openBracket.upperBound..<closeBracket.lowerBound
+//            print(script[evaluationRange])
+            
+            guard let openBigBracket = script.range(of: "{", options: .caseInsensitive, range: closeBracket.upperBound..<script.endIndex) else {break}
+            guard let closeBigBracket = script.range(of: "}", options: .caseInsensitive, range: openBigBracket.upperBound..<script.endIndex) else {break}
+            let scriptBigBracket = openBigBracket.upperBound..<closeBigBracket.lowerBound
+//            print(script[scriptBigBracket].description)
+            
+            guard let elseWord = script.range(of: "else", options: .caseInsensitive, range: closeBigBracket.upperBound..<script.endIndex) else {break}
+            guard let openBigBracket2 = script.range(of: "{", options: .caseInsensitive, range: elseWord.upperBound..<script.endIndex) else {break}
+            guard let closeBigBracket2 = script.range(of: "}", options: .caseInsensitive, range: openBigBracket2.upperBound..<script.endIndex) else {break}
+            let elseWordRange = openBigBracket2.upperBound..<closeBigBracket2.lowerBound
+//            print(script[elseWordRange].description)
+            
+            nextRange1 = closeBigBracket2.upperBound..<script.endIndex
+            
+            let eq = script[evaluationRange].range(of: "==")
+            
+            let eqRange = script[evaluationRange].startIndex..<eq!.lowerBound
+            var eqWord = script[eqRange]
+            while let range = eqWord.range(of: " ") {
+                eqWord.replaceSubrange(range, with: "")
+            }
+            
+            let eqRange2 = eq!.upperBound..<script[evaluationRange].endIndex
+            var eqWord2 = script[eqRange2]
+            while let range = eqWord2.range(of: " ") {
+                eqWord2.replaceSubrange(range, with: "")
+            }
+
+            var evaluationArg = eqWord.description
+            for i in 0..<func0.argument.count {
+                if func0.argument[i] == eqWord {
+                    evaluationArg = func0.argumentValue[i]
+                }
+            }
+            var evaluationArg2 = eqWord2.description
+            for i in 0..<func0.argument.count {
+                if func0.argument[i] == eqWord2 {
+                    evaluationArg2 = func0.argumentValue[i]
+                }
+            }
+            
+            if evaluationArg == evaluationArg2 {
+                func0.ifScript = script[scriptBigBracket].description
+                routineIf(func0: func0)
+                return
+            } else {
+                func0.ifScript = script[elseWordRange].description
+                routineIf(func0: func0)
+                return
+            }
+            
+        }
+
+        
+        var begin010 = script.startIndex
+        while let begin01 = script.range(of: "var", options: .caseInsensitive, range: begin010..<script.endIndex) {
+            guard let end1 = script.range(of: "=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {return}
+            let varRange = begin01.upperBound..<end1.lowerBound
+            var variable = script[varRange]
+
+            while let range = variable.range(of: " ") {
+                variable.replaceSubrange(range, with: "")
+            }
+            varArray.append(variable)
+
+            guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return}
+            let valRange = end1.upperBound..<nl1.lowerBound
+            var value = script[valRange]
+            while let range = value.range(of: " ") {
+                value.replaceSubrange(range, with: "")
+            }
+            while let range = value.range(of: "\"") {
+                value.replaceSubrange(range, with: "")
+            }
+            valArray.append(value)
+            begin010 = nl1.upperBound
+        }
+
+        var begin020 = script.startIndex
+        while let begin = script.range(of: "print(\"", options: .caseInsensitive, range: begin020..<script.endIndex) {
+            let nextRange = begin.upperBound..<script.endIndex
+            guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
+            let wordRange = begin.upperBound..<end.lowerBound
+            begin020 = end.upperBound
+            print(script[wordRange])
+        }
+
+        var begin030 = script.startIndex
+        while let begin3 = script.range(of: "print(", options: .caseInsensitive, range: begin030..<script.endIndex) {
+            let nextRange3 = begin3.upperBound..<script.endIndex
+            guard let end3 = script.range(of: ")", options: .caseInsensitive, range: nextRange3) else {return}
+            let printRange = begin3.upperBound..<end3.lowerBound
+            let print1 = script[printRange]
+
+            for i in 0..<varArray.count {
+                if print1 == varArray[i] {
+                    print(valArray[i])
+                }
+            }
+            for i in 0..<func0.argument.count {
+                if print1 == func0.argument[i] && func0.argument[i] != "" {
+                    print(func0.argumentValue[i])
+                }
+            }
+            for i in 0..<funcArray.count {
+                if print1 == (funcArray[i].function + "(") {
+                    print(funcArray[i].returnValue)
+                }
+            }
+            begin030 = end3.upperBound
+        }
+    }
+    
+    func routineIf(func0: Func) {
+        funcParse(script: func0.script)
+        let script = func0.ifScript
+        var varArray: [Substring] = []
+        var valArray: [Substring] = []
 
         var begin010 = script.startIndex
         while let begin01 = script.range(of: "var", options: .caseInsensitive, range: begin010..<script.endIndex) {
@@ -255,8 +410,8 @@ class Rabbit {
                     print(funcArray[i].returnValue)
                 }
             }
-
             begin030 = end3.upperBound
         }
     }
+
 }
