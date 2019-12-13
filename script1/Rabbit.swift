@@ -288,7 +288,6 @@ class Rabbit {
             }
             
         }
-
         
         var begin010 = script.startIndex
         while let begin01 = script.range(of: "var", options: .caseInsensitive, range: begin010..<script.endIndex) {
@@ -322,6 +321,73 @@ class Rabbit {
             begin010 = nl1.upperBound
         }
 
+        var nextRange4 = script.startIndex..<script.endIndex
+        while let begin4 = script.range(of: "while", options: .caseInsensitive, range: nextRange4 ) {
+            guard let openBracket = script.range(of: "(", options: .caseInsensitive, range: begin4.upperBound..<script.endIndex) else {break}
+            guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: openBracket.upperBound..<script.endIndex) else {break}
+            let evaluationRange = openBracket.upperBound..<closeBracket.lowerBound
+
+            guard let gr = script[evaluationRange].range(of: "<") else {break}
+            
+            let grRange = script[evaluationRange].startIndex..<gr.lowerBound
+            var grWord = script[grRange]
+            while let range = grWord.range(of: " ") {
+                grWord.replaceSubrange(range, with: "")
+            }
+            
+            let grRange2 = gr.upperBound..<script[evaluationRange].endIndex
+            var grWord2 = script[grRange2]
+            while let range = grWord2.range(of: " ") {
+                grWord2.replaceSubrange(range, with: "")
+            }
+
+            var val1 = 0
+            for i in 0..<varArray.count {
+                if varArray[i] == grWord {
+                    val1 = Int(valArray[i])!
+                }
+            }
+            var val2 = Int(grWord2.description)!
+            for i in 0..<varArray.count {
+                if varArray[i] == grWord2{
+                    val2 = Int(valArray[i])!
+                }
+            }
+
+            while val1 < val2 {
+                guard let openBigBracket = script.range(of: "{", options: .caseInsensitive, range: closeBracket.upperBound..<script.endIndex) else {break}
+                guard let closeBigBracket = script.range(of: "}", options: .caseInsensitive, range: openBigBracket.upperBound..<script.endIndex) else {break}
+                let scriptBigBracket = openBigBracket.upperBound..<closeBigBracket.lowerBound
+                for i in 0..<varArray.count {
+                    var begin010 = script[scriptBigBracket].startIndex
+                    while let begin01 = script[scriptBigBracket].range(of: varArray[i], options: .caseInsensitive, range: begin010..<script[scriptBigBracket].endIndex) {
+                        guard let arithmetic = script[scriptBigBracket].range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script[scriptBigBracket].endIndex) else {break}
+                        guard let nl = script[scriptBigBracket].range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script[scriptBigBracket].endIndex) else {return}
+                        var value = script[scriptBigBracket][arithmetic.upperBound..<nl.lowerBound]
+                        while let range = value.range(of: " ") {
+                            value.replaceSubrange(range, with: "")
+                        }
+
+                        val1 += Int(value.description)!
+                        begin010 = nl.upperBound
+
+                    }
+                }
+                print(val1)
+
+                
+                
+                
+                
+            }
+            nextRange4 = gr.upperBound..<script.endIndex
+        }
+        
+        
+        
+        
+        
+        
         for i in 0..<varArray.count {
             while let begin01 = script.range(of: varArray[i], options: .caseInsensitive, range: begin010..<script.endIndex) {
                 guard let arithmetic = script.range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {break}
@@ -335,6 +401,10 @@ class Rabbit {
                 begin010 = nl.upperBound
             }
         }
+
+        
+        
+        
         
         var begin020 = script.startIndex
         while let begin = script.range(of: "print(\"", options: .caseInsensitive, range: begin020..<script.endIndex) {
