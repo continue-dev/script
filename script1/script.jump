@@ -11,6 +11,13 @@ func initialize() {
 func loop() {
   var str = "play game..."
   print(str)
+  
+  var i = 0
+  while (i < 5) {
+    i += 1
+    print(i)
+  }
+  
   return 777
 }
 
@@ -18,6 +25,13 @@ func finalize() {
   var str = "good bye"
   print(str)
   print(loop())
+}
+
+func arithmetic() {
+  var result = 1 + 2
+  result += 4
+  result += 5
+  print(result)
 }
 
 func test(arg1) {
@@ -47,4 +61,5 @@ func main() {
   finalize()
   test("abcd")
   test2(123, "xyz")
+  arithmetic()
 }

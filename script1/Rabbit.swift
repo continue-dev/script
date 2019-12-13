@@ -228,7 +228,7 @@ class Rabbit {
         funcParse(script: script)
 
         var varArray: [Substring] = []
-        var valArray: [Substring] = []
+        var valArray: [String] = []
         
         var nextRange1 = script.startIndex..<script.endIndex
         while let end3 = script.range(of: "if", options: .caseInsensitive, range: nextRange1 ) {
@@ -303,17 +303,39 @@ class Rabbit {
 
             guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return}
             let valRange = end1.upperBound..<nl1.lowerBound
-            var value = script[valRange]
+            var value = script[valRange].description
             while let range = value.range(of: " ") {
                 value.replaceSubrange(range, with: "")
             }
             while let range = value.range(of: "\"") {
                 value.replaceSubrange(range, with: "")
             }
+            
+            while let arithmetic = value.range(of: "+", options: .caseInsensitive, range: value.startIndex..<value.endIndex) {
+                let value1 = value.startIndex..<arithmetic.lowerBound
+                let value2 = arithmetic.upperBound..<value.endIndex
+                let tmp = Int(value[value1].description)! + Int(value[value2].description)!
+                value = tmp.description
+
+            }
             valArray.append(value)
             begin010 = nl1.upperBound
         }
 
+        for i in 0..<varArray.count {
+            while let begin01 = script.range(of: varArray[i], options: .caseInsensitive, range: begin010..<script.endIndex) {
+                guard let arithmetic = script.range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {break}
+                guard let nl = script.range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script.endIndex) else {return}
+                var value = script[arithmetic.upperBound..<nl.lowerBound]
+                while let range = value.range(of: " ") {
+                    value.replaceSubrange(range, with: "")
+                }
+                let tmp = Int(valArray[i])
+                valArray[i] = (tmp! + Int(value.description)!).description
+                begin010 = nl.upperBound
+            }
+        }
+        
         var begin020 = script.startIndex
         while let begin = script.range(of: "print(\"", options: .caseInsensitive, range: begin020..<script.endIndex) {
             let nextRange = begin.upperBound..<script.endIndex
