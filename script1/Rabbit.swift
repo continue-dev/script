@@ -376,6 +376,18 @@ class Rabbit {
                 print(val1)
 
                 
+                for i in 0..<funcArray.count {
+                    var begin010 = script[scriptBigBracket].startIndex
+                    while let begin01 = script[scriptBigBracket].range(of: funcArray[i].function, options: .caseInsensitive, range: begin010..<script[scriptBigBracket].endIndex) {                        
+                        routine(func0: funcArray[i])
+                        begin010 = begin01.upperBound
+
+                    }
+
+                    
+                    
+                    
+                }
                 
                 
                 
