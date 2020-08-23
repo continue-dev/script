@@ -35,10 +35,12 @@ var globalVarArray : [String] = []
 var globalValArray : [String] = []
 var val0 = 0
 
-class Rabbit {
+public class Rabbit {
     private var funcArray : [Func] = []
 
-    func run(script: String) {
+    public init() {}
+
+    public func run(script: String) {
         guard let path = Bundle.main.path(forResource: script, ofType: "jump") else {return}
         do {
             let script = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
@@ -63,7 +65,7 @@ class Rabbit {
         }
     }
 
-    func onTouchDown(x: Float, y: Float) {
+    public func onTouchDown(x: Float, y: Float) {
         for i in 0..<funcArray.count {
             if funcArray[i].function == "onTouchDown" {
                 let func0: Func = funcArray[i]
@@ -78,7 +80,8 @@ class Rabbit {
             }
         }
     }
-    func falls() -> String {
+    
+    public func falls() -> String {
         for i in 0..<funcArray.count {
             if funcArray[i].function == "jumpToHostLanguage" {
              //   print(funcArray[i].script)
