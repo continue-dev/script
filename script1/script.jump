@@ -1,3 +1,4 @@
+var count = 0
 
 func initialize() {
   var str = "hello"
@@ -18,7 +19,7 @@ func loop() {
     print(i)
   }
   
-  return 777
+  return i
 }
 
 func finalize() {
@@ -52,7 +53,8 @@ func onTouchDown(x,y) {
 }
 
 func jumpToHostLanguage() {
-  jump 98765
+  count += 1
+  jump count
 }
 
 func main() {

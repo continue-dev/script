@@ -13,6 +13,9 @@ private class Func {
     var argument : [String]
     var argumentValue : [String]
     var script : String
+    var varArray : [String]
+    var valArray : [String]
+    var returnVar: String
     var returnValue: String
     var ifScript: String
     init() {
@@ -20,10 +23,17 @@ private class Func {
         argument = []
         argumentValue = []
         script = ""
+        returnVar = ""
         returnValue = ""
         ifScript = ""
+        varArray = []
+        valArray = []
     }
 }
+
+var globalVarArray : [String] = []
+var globalValArray : [String] = []
+var val0 = 0
 
 class Rabbit {
     private var funcArray : [Func] = []
@@ -32,7 +42,7 @@ class Rabbit {
         guard let path = Bundle.main.path(forResource: script, ofType: "jump") else {return}
         do {
             let script = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
-            
+            searchGloabalVar(script: script)
             searchFunc(script: script)
 
             for i in 0..<funcArray.count {
@@ -68,14 +78,74 @@ class Rabbit {
             }
         }
     }
-    func falls() {
+    func falls() -> String {
         for i in 0..<funcArray.count {
             if funcArray[i].function == "jumpToHostLanguage" {
-                print(funcArray[i].script)
+             //   print(funcArray[i].script)
+                let script = funcArray[i].script
+                var nextRange2 = script.startIndex..<script.endIndex
+                while let end2 = script.range(of: "jump", options: .caseInsensitive, range: nextRange2) {
+                    guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {break}
+                    let returnRange = end2.upperBound..<closeNL.lowerBound
+                    var returnValue = script[returnRange]
+                    while let range = returnValue.range(of: " ") {
+                       returnValue.replaceSubrange(range, with: "")
+                    }
+                    while let range = returnValue.range(of: "\"") {
+                       returnValue.replaceSubrange(range, with: "")
+                    }
+                    nextRange2 = closeNL.upperBound..<script.endIndex
+                    if returnValue.description != "" {
+                        var k = 0
+                        for v in globalVarArray {
+                            if v == returnValue {
+
+                        
+                        
+                        
+                                for j in 0..<globalVarArray.count {
+                                    
+                                    var nextRange3 = script.startIndex..<script.endIndex
+                                    var begin010 = script[nextRange3].startIndex
+                                    while let begin01 = script[nextRange3].range(of: globalVarArray[j], options: .caseInsensitive, range: begin010..<script[nextRange3].endIndex) {
+                                        
+
+                                        guard let arithmetic = script[nextRange3].range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script[nextRange3].endIndex) else {break}
+                                        guard let nl = script[nextRange3].range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script[nextRange3].endIndex) else {break}
+                                        var value = script[nextRange3][arithmetic.upperBound..<nl.lowerBound]
+                                        while let range = value.range(of: " ") {
+                                            value.replaceSubrange(range, with: "")
+                                        }
+
+                                        val0 += Int(value.description)!
+                                        begin010 = nl.upperBound
+
+                                    }
+                                }
+
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                                globalValArray[k] = val0.description
+                        
+                                print(globalValArray[k])
+                                return globalValArray[k]
+
+                            }
+                            k += 1
+                        }
+                        print(returnValue)
+                        return returnValue.description
+                    }            //funcArray[i].returnValue = returnValue.description
+                }
             }
         }
+        return ""
     }
-
     
     private func parseReturn(script: String) -> String {
         var nextRange2 = script.startIndex..<script.endIndex
@@ -98,6 +168,56 @@ class Rabbit {
         return ""
     }
     
+    private func searchGloabalVar(script: String) {
+        
+        var begin010 = script.startIndex
+        while let begin01 = script.range(of: "var", options: .caseInsensitive, range: begin010..<script.endIndex) {
+            guard let end1 = script.range(of: "=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {return}
+            let varRange = begin01.upperBound..<end1.lowerBound
+            var variable = script[varRange]
+
+            while let range = variable.range(of: " ") {
+                variable.replaceSubrange(range, with: "")
+            }
+            var flag = false
+            for v in globalVarArray {
+                if v == variable.description {
+                    flag = true
+                }
+            }
+            if !flag {
+                globalVarArray.append(variable.description)
+            }
+            
+            
+
+            guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return}
+            let valRange = end1.upperBound..<nl1.lowerBound
+            var value = script[valRange].description
+            while let range = value.range(of: " ") {
+                value.replaceSubrange(range, with: "")
+            }
+            while let range = value.range(of: "\"") {
+                value.replaceSubrange(range, with: "")
+            }
+            
+            while let arithmetic = value.range(of: "+", options: .caseInsensitive, range: value.startIndex..<value.endIndex) {
+                let value1 = value.startIndex..<arithmetic.lowerBound
+                let value2 = arithmetic.upperBound..<value.endIndex
+                let tmp = Int(value[value1].description)! + Int(value[value2].description)!
+                value = tmp.description
+
+            }
+            globalValArray.append(value)
+            begin010 = nl1.upperBound
+        }
+        
+        var i = 0
+        for gVar in globalVarArray {
+            print(gVar + "!" + globalValArray[i])
+            i += 1
+        }
+    }
     
     private func searchFunc(script: String) {
         var nextRange0 = script.startIndex..<script.endIndex
@@ -269,8 +389,8 @@ class Rabbit {
         let script = func0.script
 //        funcParse(script: script)
 
-        var varArray: [Substring] = []
-        var valArray: [String] = []
+//        var varArray: [Substring] = []
+//        var valArray: [String] = []
 
         for i in 0..<funcArray.count {
             var nextRange0 = script.startIndex..<script.endIndex
@@ -348,7 +468,17 @@ class Rabbit {
             while let range = variable.range(of: " ") {
                 variable.replaceSubrange(range, with: "")
             }
-            varArray.append(variable)
+            var flag = false
+            for v in func0.varArray {
+                if v == variable.description {
+                    flag = true
+                }
+            }
+            if !flag {
+                func0.varArray.append(variable.description)
+            }
+            
+            
 
             guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return}
             let valRange = end1.upperBound..<nl1.lowerBound
@@ -367,7 +497,7 @@ class Rabbit {
                 value = tmp.description
 
             }
-            valArray.append(value)
+            func0.valArray.append(value)
             begin010 = nl1.upperBound
         }
 
@@ -392,15 +522,15 @@ class Rabbit {
             }
 
             var val1 = 0
-            for i in 0..<varArray.count {
-                if varArray[i] == grWord {
-                    val1 = Int(valArray[i])!
+            for i in 0..<func0.varArray.count {
+                if func0.varArray[i] == grWord {
+                    val1 = Int(func0.valArray[i])!
                 }
             }
             var val2 = Int(grWord2.description)!
-            for i in 0..<varArray.count {
-                if varArray[i] == grWord2{
-                    val2 = Int(valArray[i])!
+            for i in 0..<func0.varArray.count {
+                if func0.varArray[i] == grWord2{
+                    val2 = Int(func0.valArray[i])!
                 }
             }
 
@@ -408,9 +538,9 @@ class Rabbit {
                 guard let openBigBracket = script.range(of: "{", options: .caseInsensitive, range: closeBracket.upperBound..<script.endIndex) else {break}
                 guard let closeBigBracket = script.range(of: "}", options: .caseInsensitive, range: openBigBracket.upperBound..<script.endIndex) else {break}
                 let scriptBigBracket = openBigBracket.upperBound..<closeBigBracket.lowerBound
-                for i in 0..<varArray.count {
+                for i in 0..<func0.varArray.count {
                     var begin010 = script[scriptBigBracket].startIndex
-                    while let begin01 = script[scriptBigBracket].range(of: varArray[i], options: .caseInsensitive, range: begin010..<script[scriptBigBracket].endIndex) {
+                    while let begin01 = script[scriptBigBracket].range(of: func0.varArray[i], options: .caseInsensitive, range: begin010..<script[scriptBigBracket].endIndex) {
                         guard let arithmetic = script[scriptBigBracket].range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script[scriptBigBracket].endIndex) else {break}
                         guard let nl = script[scriptBigBracket].range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script[scriptBigBracket].endIndex) else {return}
                         var value = script[scriptBigBracket][arithmetic.upperBound..<nl.lowerBound]
@@ -423,7 +553,7 @@ class Rabbit {
 
                     }
                 }
-                print(val1)
+                print("@@@" + val1.description)
 
                 
                 for i in 0..<funcArray.count {
@@ -442,6 +572,11 @@ class Rabbit {
                 
                 
             }
+            for v in func0.varArray {
+                if v == func0.returnVar {
+                    func0.returnValue = val1.description
+                }
+            }
             nextRange4 = gr.upperBound..<script.endIndex
         }
         
@@ -450,16 +585,16 @@ class Rabbit {
         
         
         
-        for i in 0..<varArray.count {
-            while let begin01 = script.range(of: varArray[i], options: .caseInsensitive, range: begin010..<script.endIndex) {
+        for i in 0..<func0.varArray.count {
+            while let begin01 = script.range(of: func0.varArray[i], options: .caseInsensitive, range: begin010..<script.endIndex) {
                 guard let arithmetic = script.range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {break}
                 guard let nl = script.range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script.endIndex) else {return}
                 var value = script[arithmetic.upperBound..<nl.lowerBound]
                 while let range = value.range(of: " ") {
                     value.replaceSubrange(range, with: "")
                 }
-                let tmp = Int(valArray[i])
-                valArray[i] = (tmp! + Int(value.description)!).description
+                let tmp = Int(func0.valArray[i])
+                func0.valArray[i] = (tmp! + Int(value.description)!).description
                 begin010 = nl.upperBound
             }
         }
@@ -474,7 +609,7 @@ class Rabbit {
             guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
             let wordRange = begin.upperBound..<end.lowerBound
             begin020 = end.upperBound
-            print(script[wordRange])
+            print("*" + script[wordRange])
         }
 
         var begin030 = script.startIndex
@@ -484,9 +619,9 @@ class Rabbit {
             let printRange = begin3.upperBound..<end3.lowerBound
             let print1 = script[printRange]
 
-            for i in 0..<varArray.count {
-                if print1 == varArray[i] {
-                    print(valArray[i])
+            for j in 0..<func0.varArray.count {
+                if print1 == func0.varArray[j] && func0.returnVar != print1 {
+                    print(func0.varArray[j] + "@" + func0.valArray[j])
                 }
             }
             for i in 0..<func0.argument.count {
@@ -495,8 +630,18 @@ class Rabbit {
                 }
             }
             for i in 0..<funcArray.count {
+
                 if print1 == (funcArray[i].function + "(") {
-                    print(funcArray[i].returnValue)
+                    var flag = false
+                    for j in 0..<funcArray[i].varArray.count {
+                        if funcArray[i].returnVar == funcArray[i].varArray[j] {
+                            print("@@" + funcArray[i].returnValue)
+                            flag = true
+                        }
+                    }
+                    if !flag {
+                        print("**" + funcArray[i].returnValue)
+                    }
                 }
             }
             begin030 = end3.upperBound
