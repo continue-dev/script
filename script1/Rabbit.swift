@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Func {
+private class Func {
     var function : String
     var argument : [String]
     var argumentValue : [String]
@@ -77,7 +77,7 @@ class Rabbit {
     }
 
     
-    func parseReturn(script: String) -> String {
+    private func parseReturn(script: String) -> String {
         var nextRange2 = script.startIndex..<script.endIndex
         while let end2 = script.range(of: "return", options: .caseInsensitive, range: nextRange2) {
             guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {break}
@@ -99,7 +99,7 @@ class Rabbit {
     }
     
     
-    func searchFunc(script: String) {
+    private func searchFunc(script: String) {
         var nextRange0 = script.startIndex..<script.endIndex
         // scriptの中からfuncを検索
         while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
@@ -189,7 +189,7 @@ class Rabbit {
         }
     }
 
-    func funcParse(script:String) {
+    private func funcParse(script:String) {
         for i in 0..<funcArray.count {
             funcArray[i].returnValue = parseReturn(script: funcArray[i].script)
             // 関数のスクリプトの中身に 関数名と"(" があるか検索
@@ -254,18 +254,18 @@ class Rabbit {
         }
     }
     
-    func searchElement() {
+    private func searchElement() {
     }
     
-    func elementParse() {
+    private func elementParse() {
     }
     
-    func exec() {
+    private func exec() {
         
     }
     
 
-    func routine(func0: Func) {
+    private func routine(func0: Func) {
         let script = func0.script
 //        funcParse(script: script)
 
@@ -503,7 +503,7 @@ class Rabbit {
         }
     }
     
-    func routineIf(func0: Func) {
+    private func routineIf(func0: Func) {
 //        funcParse(script: func0.script)
         let script = func0.ifScript
         var varArray: [Substring] = []
