@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F47D66872398CC56009BA0EA /* Rabbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D66862398CC56009BA0EA /* Rabbit.swift */; };
+		E52F9D4324F21D2F00D8096D /* Rabbit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52F9D4124F21D2F00D8096D /* Rabbit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E52F9D4624F21D2F00D8096D /* Rabbit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E52F9D3F24F21D2F00D8096D /* Rabbit.framework */; };
+		E52F9D4724F21D2F00D8096D /* Rabbit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E52F9D3F24F21D2F00D8096D /* Rabbit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E52F9D4C24F21D4200D8096D /* Rabbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D66862398CC56009BA0EA /* Rabbit.swift */; };
 		F4FBF52E238D4FB400CAD9F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FBF52D238D4FB400CAD9F3 /* AppDelegate.swift */; };
 		F4FBF530238D4FB400CAD9F3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = F4FBF52F238D4FB400CAD9F3 /* GameScene.sks */; };
 		F4FBF532238D4FB400CAD9F3 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = F4FBF531238D4FB400CAD9F3 /* Actions.sks */; };
@@ -19,7 +22,34 @@
 		F4FBF546238D4FD800CAD9F3 /* script.jump in Resources */ = {isa = PBXBuildFile; fileRef = F4FBF545238D4FD800CAD9F3 /* script.jump */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		E52F9D4424F21D2F00D8096D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4FBF522238D4FB400CAD9F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E52F9D3E24F21D2F00D8096D;
+			remoteInfo = Rabbit;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E52F9D4824F21D2F00D8096D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E52F9D4724F21D2F00D8096D /* Rabbit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		E52F9D3F24F21D2F00D8096D /* Rabbit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rabbit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E52F9D4124F21D2F00D8096D /* Rabbit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rabbit.h; sourceTree = "<group>"; };
+		E52F9D4224F21D2F00D8096D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F47D66862398CC56009BA0EA /* Rabbit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rabbit.swift; sourceTree = "<group>"; };
 		F4FBF52A238D4FB400CAD9F3 /* script1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = script1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4FBF52D238D4FB400CAD9F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -35,20 +65,39 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		F4FBF527238D4FB400CAD9F3 /* Frameworks */ = {
+		E52F9D3C24F21D2F00D8096D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		F4FBF527238D4FB400CAD9F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E52F9D4624F21D2F00D8096D /* Rabbit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E52F9D4024F21D2F00D8096D /* Rabbit */ = {
+			isa = PBXGroup;
+			children = (
+				F47D66862398CC56009BA0EA /* Rabbit.swift */,
+				E52F9D4124F21D2F00D8096D /* Rabbit.h */,
+				E52F9D4224F21D2F00D8096D /* Info.plist */,
+			);
+			path = Rabbit;
+			sourceTree = "<group>";
+		};
 		F4FBF521238D4FB400CAD9F3 = {
 			isa = PBXGroup;
 			children = (
 				F4FBF52C238D4FB400CAD9F3 /* script1 */,
+				E52F9D4024F21D2F00D8096D /* Rabbit */,
 				F4FBF52B238D4FB400CAD9F3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -57,6 +106,7 @@
 			isa = PBXGroup;
 			children = (
 				F4FBF52A238D4FB400CAD9F3 /* script1.app */,
+				E52F9D3F24F21D2F00D8096D /* Rabbit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -74,14 +124,42 @@
 				F4FBF53C238D4FB500CAD9F3 /* LaunchScreen.storyboard */,
 				F4FBF53F238D4FB500CAD9F3 /* Info.plist */,
 				F4FBF545238D4FD800CAD9F3 /* script.jump */,
-				F47D66862398CC56009BA0EA /* Rabbit.swift */,
 			);
 			path = script1;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		E52F9D3A24F21D2F00D8096D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E52F9D4324F21D2F00D8096D /* Rabbit.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
+		E52F9D3E24F21D2F00D8096D /* Rabbit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E52F9D4B24F21D2F00D8096D /* Build configuration list for PBXNativeTarget "Rabbit" */;
+			buildPhases = (
+				E52F9D3A24F21D2F00D8096D /* Headers */,
+				E52F9D3B24F21D2F00D8096D /* Sources */,
+				E52F9D3C24F21D2F00D8096D /* Frameworks */,
+				E52F9D3D24F21D2F00D8096D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Rabbit;
+			productName = Rabbit;
+			productReference = E52F9D3F24F21D2F00D8096D /* Rabbit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		F4FBF529238D4FB400CAD9F3 /* script1 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F4FBF542238D4FB500CAD9F3 /* Build configuration list for PBXNativeTarget "script1" */;
@@ -89,10 +167,12 @@
 				F4FBF526238D4FB400CAD9F3 /* Sources */,
 				F4FBF527238D4FB400CAD9F3 /* Frameworks */,
 				F4FBF528238D4FB400CAD9F3 /* Resources */,
+				E52F9D4824F21D2F00D8096D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				E52F9D4524F21D2F00D8096D /* PBXTargetDependency */,
 			);
 			name = script1;
 			productName = script1;
@@ -109,6 +189,9 @@
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Yoshiki Izumi";
 				TargetAttributes = {
+					E52F9D3E24F21D2F00D8096D = {
+						CreatedOnToolsVersion = 11.5;
+					};
 					F4FBF529238D4FB400CAD9F3 = {
 						CreatedOnToolsVersion = 11.2.1;
 					};
@@ -128,11 +211,19 @@
 			projectRoot = "";
 			targets = (
 				F4FBF529238D4FB400CAD9F3 /* script1 */,
+				E52F9D3E24F21D2F00D8096D /* Rabbit */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E52F9D3D24F21D2F00D8096D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4FBF528238D4FB400CAD9F3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -149,6 +240,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E52F9D3B24F21D2F00D8096D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E52F9D4C24F21D4200D8096D /* Rabbit.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F4FBF526238D4FB400CAD9F3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -156,11 +255,18 @@
 				F4FBF534238D4FB400CAD9F3 /* GameScene.swift in Sources */,
 				F4FBF536238D4FB400CAD9F3 /* GameViewController.swift in Sources */,
 				F4FBF52E238D4FB400CAD9F3 /* AppDelegate.swift in Sources */,
-				F47D66872398CC56009BA0EA /* Rabbit.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		E52F9D4524F21D2F00D8096D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E52F9D3E24F21D2F00D8096D /* Rabbit */;
+			targetProxy = E52F9D4424F21D2F00D8096D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		F4FBF537238D4FB400CAD9F3 /* Main.storyboard */ = {
@@ -182,6 +288,62 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		E52F9D4924F21D2F00D8096D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = ZSHW56Z6F8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Rabbit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.akio0911.Rabbit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		E52F9D4A24F21D2F00D8096D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = ZSHW56Z6F8;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = Rabbit/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.akio0911.Rabbit;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
 		F4FBF540238D4FB500CAD9F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -299,6 +461,7 @@
 		F4FBF543238D4FB500CAD9F3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZSHW56Z6F8;
@@ -317,6 +480,7 @@
 		F4FBF544238D4FB500CAD9F3 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = ZSHW56Z6F8;
@@ -335,6 +499,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E52F9D4B24F21D2F00D8096D /* Build configuration list for PBXNativeTarget "Rabbit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E52F9D4924F21D2F00D8096D /* Debug */,
+				E52F9D4A24F21D2F00D8096D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F4FBF525238D4FB400CAD9F3 /* Build configuration list for PBXProject "script1" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

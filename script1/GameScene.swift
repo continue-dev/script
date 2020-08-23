@@ -8,6 +8,7 @@
 
 import SpriteKit
 import GameplayKit
+import Rabbit
 
 class GameScene: SKScene {
     
