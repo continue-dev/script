@@ -168,6 +168,7 @@ class Rabbit {
         return ""
     }
     
+    // グローバル変数だけ拾うようにすること、現在全ての変数を拾ってしまっている。
     private func searchGloabalVar(script: String) {
         
         var begin010 = script.startIndex
@@ -211,12 +212,13 @@ class Rabbit {
             globalValArray.append(value)
             begin010 = nl1.upperBound
         }
-        
-        var i = 0
-        for gVar in globalVarArray {
-            print(gVar + "!" + globalValArray[i])
-            i += 1
-        }
+
+        // グローバル変数確認用
+//        var i = 0
+//        for gVar in globalVarArray {
+//            print(gVar + "!" + globalValArray[i])
+//            i += 1
+//        }
     }
     
     private func searchFunc(script: String) {
@@ -311,7 +313,7 @@ class Rabbit {
 
     private func funcParse(script:String) {
         for i in 0..<funcArray.count {
-            funcArray[i].returnValue = parseReturn(script: funcArray[i].script)
+            funcArray[i].returnVar = parseReturn(script: funcArray[i].script)
             // 関数のスクリプトの中身に 関数名と"(" があるか検索
             var nextRange1 = script.startIndex..<script.endIndex
 
@@ -553,7 +555,7 @@ class Rabbit {
 
                     }
                 }
-                print("@@@" + val1.description)
+                print(val1.description)
 
                 
                 for i in 0..<funcArray.count {
@@ -609,7 +611,7 @@ class Rabbit {
             guard let end = script.range(of: "\"", options: .caseInsensitive, range: nextRange) else {return}
             let wordRange = begin.upperBound..<end.lowerBound
             begin020 = end.upperBound
-            print("*" + script[wordRange])
+            print(script[wordRange])
         }
 
         var begin030 = script.startIndex
@@ -635,12 +637,12 @@ class Rabbit {
                     var flag = false
                     for j in 0..<funcArray[i].varArray.count {
                         if funcArray[i].returnVar == funcArray[i].varArray[j] {
-                            print("@@" + funcArray[i].returnValue)
+                            print(funcArray[i].returnValue)
                             flag = true
                         }
                     }
                     if !flag {
-                        print("**" + funcArray[i].returnValue)
+                        print(funcArray[i].returnValue)
                     }
                 }
             }
