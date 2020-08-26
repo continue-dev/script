@@ -81,9 +81,9 @@ public class Rabbit {
         }
     }
     
-    public func falls() -> String {
+    public func falls(methodName: String) -> String {
         for i in 0..<funcArray.count {
-            if funcArray[i].function == "jumpToHostLanguage" {
+            if funcArray[i].function == methodName {
              //   print(funcArray[i].script)
                 let script = funcArray[i].script
                 var nextRange2 = script.startIndex..<script.endIndex
@@ -135,13 +135,13 @@ public class Rabbit {
                         
                                 globalValArray[k] = val0.description
                         
-                                print(globalValArray[k])
+//                                print(globalValArray[k])
                                 return globalValArray[k]
 
                             }
                             k += 1
                         }
-                        print(returnValue)
+//                        print(returnValue)
                         return returnValue.description
                     }            //funcArray[i].returnValue = returnValue.description
                 }
