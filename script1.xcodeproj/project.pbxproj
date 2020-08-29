@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E518978924FA4D380001DD7E /* RabbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E518978824FA4D380001DD7E /* RabbitTests.swift */; };
+		E518978B24FA4D380001DD7E /* Rabbit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E52F9D3F24F21D2F00D8096D /* Rabbit.framework */; };
 		E52F9D4324F21D2F00D8096D /* Rabbit.h in Headers */ = {isa = PBXBuildFile; fileRef = E52F9D4124F21D2F00D8096D /* Rabbit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E52F9D4624F21D2F00D8096D /* Rabbit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E52F9D3F24F21D2F00D8096D /* Rabbit.framework */; };
 		E52F9D4724F21D2F00D8096D /* Rabbit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E52F9D3F24F21D2F00D8096D /* Rabbit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -23,6 +25,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		E518978C24FA4D380001DD7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4FBF522238D4FB400CAD9F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E52F9D3E24F21D2F00D8096D;
+			remoteInfo = Rabbit;
+		};
+		E518979124FA4DAD0001DD7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F4FBF522238D4FB400CAD9F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F4FBF529238D4FB400CAD9F3;
+			remoteInfo = script1;
+		};
 		E52F9D4424F21D2F00D8096D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4FBF522238D4FB400CAD9F3 /* Project object */;
@@ -47,6 +63,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E518978624FA4D380001DD7E /* RabbitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RabbitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E518978824FA4D380001DD7E /* RabbitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RabbitTests.swift; sourceTree = "<group>"; };
+		E518978A24FA4D380001DD7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E52F9D3F24F21D2F00D8096D /* Rabbit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Rabbit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E52F9D4124F21D2F00D8096D /* Rabbit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Rabbit.h; sourceTree = "<group>"; };
 		E52F9D4224F21D2F00D8096D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -65,6 +84,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E518978324FA4D380001DD7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E518978B24FA4D380001DD7E /* Rabbit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E52F9D3C24F21D2F00D8096D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -83,6 +110,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E518978724FA4D380001DD7E /* RabbitTests */ = {
+			isa = PBXGroup;
+			children = (
+				E518978824FA4D380001DD7E /* RabbitTests.swift */,
+				E518978A24FA4D380001DD7E /* Info.plist */,
+			);
+			path = RabbitTests;
+			sourceTree = "<group>";
+		};
 		E52F9D4024F21D2F00D8096D /* Rabbit */ = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +134,7 @@
 			children = (
 				F4FBF52C238D4FB400CAD9F3 /* script1 */,
 				E52F9D4024F21D2F00D8096D /* Rabbit */,
+				E518978724FA4D380001DD7E /* RabbitTests */,
 				F4FBF52B238D4FB400CAD9F3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,6 +144,7 @@
 			children = (
 				F4FBF52A238D4FB400CAD9F3 /* script1.app */,
 				E52F9D3F24F21D2F00D8096D /* Rabbit.framework */,
+				E518978624FA4D380001DD7E /* RabbitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -142,6 +180,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		E518978524FA4D380001DD7E /* RabbitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E518979024FA4D380001DD7E /* Build configuration list for PBXNativeTarget "RabbitTests" */;
+			buildPhases = (
+				E518978224FA4D380001DD7E /* Sources */,
+				E518978324FA4D380001DD7E /* Frameworks */,
+				E518978424FA4D380001DD7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E518978D24FA4D380001DD7E /* PBXTargetDependency */,
+				E518979224FA4DAD0001DD7E /* PBXTargetDependency */,
+			);
+			name = RabbitTests;
+			productName = RabbitTests;
+			productReference = E518978624FA4D380001DD7E /* RabbitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		E52F9D3E24F21D2F00D8096D /* Rabbit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = E52F9D4B24F21D2F00D8096D /* Build configuration list for PBXNativeTarget "Rabbit" */;
@@ -185,10 +242,13 @@
 		F4FBF522238D4FB400CAD9F3 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1120;
+				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = "Yoshiki Izumi";
 				TargetAttributes = {
+					E518978524FA4D380001DD7E = {
+						CreatedOnToolsVersion = 11.5;
+					};
 					E52F9D3E24F21D2F00D8096D = {
 						CreatedOnToolsVersion = 11.5;
 					};
@@ -212,11 +272,19 @@
 			targets = (
 				F4FBF529238D4FB400CAD9F3 /* script1 */,
 				E52F9D3E24F21D2F00D8096D /* Rabbit */,
+				E518978524FA4D380001DD7E /* RabbitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E518978424FA4D380001DD7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E52F9D3D24F21D2F00D8096D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -240,6 +308,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E518978224FA4D380001DD7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E518978924FA4D380001DD7E /* RabbitTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E52F9D3B24F21D2F00D8096D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -261,6 +337,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		E518978D24FA4D380001DD7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E52F9D3E24F21D2F00D8096D /* Rabbit */;
+			targetProxy = E518978C24FA4D380001DD7E /* PBXContainerItemProxy */;
+		};
+		E518979224FA4DAD0001DD7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F4FBF529238D4FB400CAD9F3 /* script1 */;
+			targetProxy = E518979124FA4DAD0001DD7E /* PBXContainerItemProxy */;
+		};
 		E52F9D4524F21D2F00D8096D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = E52F9D3E24F21D2F00D8096D /* Rabbit */;
@@ -288,6 +374,42 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		E518978E24FA4D380001DD7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RabbitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.akio0911.RabbitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E518978F24FA4D380001DD7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = RabbitTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.akio0911.RabbitTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		E52F9D4924F21D2F00D8096D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -499,6 +621,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E518979024FA4D380001DD7E /* Build configuration list for PBXNativeTarget "RabbitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E518978E24FA4D380001DD7E /* Debug */,
+				E518978F24FA4D380001DD7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		E52F9D4B24F21D2F00D8096D /* Build configuration list for PBXNativeTarget "Rabbit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
