@@ -314,9 +314,22 @@ public class Rabbit {
         }
     }
 
+    private func searchWhileReturn(funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
+        guard let nl = funcInstance.script.range(of: "\n", options: .caseInsensitive, range: range.upperBound..<funcInstance.script.endIndex) else {return range}
+        let returnRange = range.upperBound..<nl.lowerBound
+        var returnValue = funcInstance.script[returnRange]
+        while let range = returnValue.range(of: " ") {
+            returnValue.replaceSubrange(range, with: "")
+        }
+        while let range = returnValue.range(of: "\"") {
+            returnValue.replaceSubrange(range, with: "")
+        }
+        funcInstance.returnVar = returnValue.description
+        return nl.upperBound..<funcInstance.script.endIndex
+    }
     private func funcParse(script:String) {
         for i in 0..<funcArray.count {
-            funcArray[i].returnVar = parseReturn(script: funcArray[i].script)
+            searchWhile(funcInstance: funcArray[i], word: "return", range: funcArray[i].script.startIndex..<funcArray[i].script.endIndex, function: searchWhileReturn, funcWord: "")
             // 関数のスクリプトの中身に 関数名と"(" があるか検索
             var nextRange1 = script.startIndex..<script.endIndex
 
@@ -388,7 +401,13 @@ public class Rabbit {
     private func exec() {
         
     }
-    
+    private func searchWhile(funcInstance: Func, word: String, range: Range<String.Index>, function: (Func, String, Range<String.Index>) -> Range<String.Index>, funcWord: String) {
+        var nextRange = range
+        while let end = funcInstance.script.range(of: word, options: .caseInsensitive, range: nextRange) {
+            let end2 = function(funcInstance, funcWord, end)
+            nextRange = end2.upperBound..<funcInstance.script.endIndex
+        }
+    }
 
     private func routine(func0: Func) {
         let script = func0.script
