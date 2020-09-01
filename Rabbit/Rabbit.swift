@@ -150,26 +150,6 @@ public class Rabbit {
         return ""
     }
     
-    private func parseReturn(script: String) -> String {
-        var nextRange2 = script.startIndex..<script.endIndex
-        while let end2 = script.range(of: "return", options: .caseInsensitive, range: nextRange2) {
-            guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {break}
-            let returnRange = end2.upperBound..<closeNL.lowerBound
-            var returnValue = script[returnRange]
-            while let range = returnValue.range(of: " ") {
-               returnValue.replaceSubrange(range, with: "")
-            }
-            while let range = returnValue.range(of: "\"") {
-               returnValue.replaceSubrange(range, with: "")
-            }
-            nextRange2 = closeNL.upperBound..<script.endIndex
-            if returnValue.description != "" {
-                return returnValue.description
-            }            //funcArray[i].returnValue = returnValue.description
-
-        }
-        return ""
-    }
     
     // グローバル変数だけ拾うようにすること、現在全ての変数を拾ってしまっている。
     private func searchGloabalVar(script: String) {
@@ -272,6 +252,7 @@ public class Rabbit {
                        arg.replaceSubrange(range, with: "")
                     }
                     func0.argument.append(arg.description)
+
                 }
             }
             // 関数の中身を取得
@@ -314,7 +295,7 @@ public class Rabbit {
         }
     }
 
-    private func searchWhileReturn(funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
+    private func searchWhileReturn(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
         guard let nl = funcInstance.script.range(of: "\n", options: .caseInsensitive, range: range.upperBound..<funcInstance.script.endIndex) else {return range}
         let returnRange = range.upperBound..<nl.lowerBound
         var returnValue = funcInstance.script[returnRange]
@@ -327,68 +308,53 @@ public class Rabbit {
         funcInstance.returnVar = returnValue.description
         return nl.upperBound..<funcInstance.script.endIndex
     }
+    
+    private func searchWhileFunc(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
+        // 関数名と"("があった場合、 ")"を検索
+        guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: range.upperBound..<script.endIndex) else {
+            return range}
+        // "("と")"の間にあった文字列が引数になる
+        let argumentRange = range.upperBound..<closeBracket.lowerBound
+        var argument = script[argumentRange]
+        var argumnetBegin = argument.startIndex
+        var flag: Bool = true
+        if !(argument == "" || argument == " ") {
+
+            // 引数の文字列の中に","があるか検索
+            while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
+                // ","があれば引数の１つとしてFuncクラスの引数の値の配列に登録
+                let argument0 = argumnetBegin..<argumentEnd.lowerBound
+                var argument00 = argument[argument0]
+                while let range = argument00.range(of: " ") {
+                    argument00.replaceSubrange(range, with: "")
+                }
+                funcInstance.argumentValue.append(argument00.description)
+                argumnetBegin = argumentEnd.upperBound
+                flag = false
+            }
+            while let range = argument.range(of: "\"") {
+                argument.replaceSubrange(range, with: "")
+            }
+            if flag == true {
+                funcInstance.argumentValue.append(argument.description)
+            } else {
+                var arg = argument[argumnetBegin..<argument.endIndex]
+                while let range = arg.range(of: " ") {
+                   arg.replaceSubrange(range, with: "")
+                }
+                funcInstance.argumentValue.append(arg.description)
+            }
+        }
+        // 関数を実行
+//                routine(func0: funcArray[i])
+        return argumentRange
+    }
     private func funcParse(script:String) {
         for i in 0..<funcArray.count {
-            searchWhile(funcInstance: funcArray[i], word: "return", range: funcArray[i].script.startIndex..<funcArray[i].script.endIndex, function: searchWhileReturn, funcWord: "")
-            // 関数のスクリプトの中身に 関数名と"(" があるか検索
-            var nextRange1 = script.startIndex..<script.endIndex
-
-            while let end1 = script.range(of: funcArray[i].function + "(", options: .caseInsensitive, range: nextRange1 ) {
-                // 関数名と"("があった場合、 ")"を検索
-                guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {break}
-                // "("と")"の間にあった文字列が引数になる
-                let argumentRange = end1.upperBound..<closeBracket.lowerBound
-                var argument = script[argumentRange]
-                var argumnetBegin = argument.startIndex
-                var flag: Bool = true
-//                print(argument)
-                if !(argument == "" || argument == " ") {
-
-                    // 引数の文字列の中に","があるか検索
-                    while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
-                        // ","があれば引数の１つとしてFuncクラスの引数の値の配列に登録
-                        let argument0 = argumnetBegin..<argumentEnd.lowerBound
-                        var argument00 = argument[argument0]
-                        while let range = argument00.range(of: " ") {
-                            argument00.replaceSubrange(range, with: "")
-                        }
-                        funcArray[i].argumentValue.append(argument00.description)
-                        argumnetBegin = argumentEnd.upperBound
-                        flag = false
-                    }
-                    while let range = argument.range(of: "\"") {
-                        argument.replaceSubrange(range, with: "")
-                    }
-                    if flag == true {
-                        funcArray[i].argumentValue.append(argument.description)
-                    } else {
-                        var arg = argument[argumnetBegin..<argument.endIndex]
-                        while let range = arg.range(of: " ") {
-                           arg.replaceSubrange(range, with: "")
-                        }
-                        funcArray[i].argumentValue.append(arg.description)
-                    }
-                }
-                // 関数を実行
-//                routine(func0: funcArray[i])
-                nextRange1 = argumentRange.upperBound..<script.endIndex
-            }
-
-//            var nextRange2 = script.startIndex..<script.endIndex
-//            while let end2 = script.range(of: "return", options: .caseInsensitive, range: nextRange2) {
-//                guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {break}
-//                let returnRange = end2.upperBound..<closeNL.lowerBound
-//                var returnValue = script[returnRange]
-//                while let range = returnValue.range(of: " ") {
-//                   returnValue.replaceSubrange(range, with: "")
-//                }
-//                while let range = returnValue.range(of: "\"") {
-//                   returnValue.replaceSubrange(range, with: "")
-//                }
-//                funcArray[i].returnValue = returnValue.description
-//                print(funcArray[i].returnValue)
-//                nextRange2 = closeNL.upperBound..<script.endIndex
-//            }
+            searchWhile(script: funcArray[i].script, funcInstance: funcArray[i], word: "return", range: funcArray[i].script.startIndex..<funcArray[i].script.endIndex, function: searchWhileReturn, funcWord: "")
+            
+            
+            searchWhile(script: script, funcInstance: funcArray[i], word: funcArray[i].function + "(", range: script.startIndex..<script.endIndex, function: searchWhileFunc, funcWord: "")
         }
     }
     
@@ -401,11 +367,11 @@ public class Rabbit {
     private func exec() {
         
     }
-    private func searchWhile(funcInstance: Func, word: String, range: Range<String.Index>, function: (Func, String, Range<String.Index>) -> Range<String.Index>, funcWord: String) {
+    private func searchWhile(script: String, funcInstance: Func, word: String, range: Range<String.Index>, function: (String, Func, String, Range<String.Index>) -> Range<String.Index>, funcWord: String) {
         var nextRange = range
-        while let end = funcInstance.script.range(of: word, options: .caseInsensitive, range: nextRange) {
-            let end2 = function(funcInstance, funcWord, end)
-            nextRange = end2.upperBound..<funcInstance.script.endIndex
+        while let end = script.range(of: word, options: .caseInsensitive, range: nextRange) {
+            let end2 = function(script, funcInstance, funcWord, end)
+            nextRange = end2.upperBound..<script.endIndex
         }
     }
 
@@ -650,7 +616,7 @@ public class Rabbit {
             }
             for i in 0..<func0.argument.count {
                 if print1 == func0.argument[i] && func0.argumentValue[i] != "" {
-                    print(func0.argumentValue[i])
+                    print(func0.argumentValue[i] + "!!" + func0.argument[i])
                 }
             }
             for i in 0..<funcArray.count {
@@ -720,12 +686,12 @@ public class Rabbit {
 
             for i in 0..<varArray.count {
                 if print1 == varArray[i] {
-                    print(valArray[i])
+                    print(valArray[i] + "!@!" + varArray[i])
                 }
             }
             for i in 0..<func0.argument.count {
                 if print1 == func0.argument[i] && func0.argument[i] != "" {
-                    print(func0.argumentValue[i])
+                    print(func0.argumentValue[i] + "!!!" + func0.argument[i])
                 }
             }
             for i in 0..<funcArray.count {
