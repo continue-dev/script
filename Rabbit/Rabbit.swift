@@ -17,6 +17,9 @@ private class Func {
     var valArray : [String]
     var returnVar: String
     var returnValue: String
+    var globalVar: String
+    var globalVal: String
+    var globalInt: Int
     var ifScript: String
     init() {
         function = ""
@@ -28,12 +31,14 @@ private class Func {
         ifScript = ""
         varArray = []
         valArray = []
+        globalVar = ""
+        globalVal = ""
+        globalInt = 0
     }
 }
 
 var globalVarArray : [String] = []
 var globalValArray : [String] = []
-var val0 = 0
 
 public class Rabbit {
     private var funcArray : [Func] = []
@@ -44,15 +49,18 @@ public class Rabbit {
         guard let path = Bundle.main.path(forResource: script, ofType: "jump") else {return}
         do {
             let script = try String(contentsOfFile: path, encoding: String.Encoding.utf8)
-            searchGloabalVar(script: script)
-            searchFunc(script: script)
+
+            searchWhile(script: script, funcInstance: Func(), word: "var", range: script.startIndex..<script.endIndex, function: searchWhileGlobalVar, funcWord: "")
+
+            searchWhile(script: script, funcInstance: Func(), word: "func", range: script.startIndex..<script.endIndex, function: searchWhileFunc, funcWord: "")
+            
 
             for i in 0..<funcArray.count {
                 if funcArray[i].function == "main" {
                     funcParse(script: funcArray[i].script)
                 }
             }
-            
+
             for i in 0..<funcArray.count {
                 if funcArray[i].function != "onTouchDown" && funcArray[i].function == "main" {
                     routine(func0: funcArray[i])
@@ -84,79 +92,73 @@ public class Rabbit {
     public func falls(methodName: String) -> String {
         for i in 0..<funcArray.count {
             if funcArray[i].function == methodName {
-             //   print(funcArray[i].script)
-                let script = funcArray[i].script
-                var nextRange2 = script.startIndex..<script.endIndex
-                while let end2 = script.range(of: "jump", options: .caseInsensitive, range: nextRange2) {
-                    guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {break}
-                    let returnRange = end2.upperBound..<closeNL.lowerBound
-                    var returnValue = script[returnRange]
-                    while let range = returnValue.range(of: " ") {
-                       returnValue.replaceSubrange(range, with: "")
-                    }
-                    while let range = returnValue.range(of: "\"") {
-                       returnValue.replaceSubrange(range, with: "")
-                    }
-                    nextRange2 = closeNL.upperBound..<script.endIndex
-                    if returnValue.description != "" {
-                        var k = 0
-                        for v in globalVarArray {
-                            if v == returnValue {
-
-                        
-                        
-                        
-                                for j in 0..<globalVarArray.count {
-                                    
-                                    var nextRange3 = script.startIndex..<script.endIndex
-                                    var begin010 = script[nextRange3].startIndex
-                                    while let begin01 = script[nextRange3].range(of: globalVarArray[j], options: .caseInsensitive, range: begin010..<script[nextRange3].endIndex) {
-                                        
-
-                                        guard let arithmetic = script[nextRange3].range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script[nextRange3].endIndex) else {break}
-                                        guard let nl = script[nextRange3].range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script[nextRange3].endIndex) else {break}
-                                        var value = script[nextRange3][arithmetic.upperBound..<nl.lowerBound]
-                                        while let range = value.range(of: " ") {
-                                            value.replaceSubrange(range, with: "")
-                                        }
-
-                                        val0 += Int(value.description)!
-                                        begin010 = nl.upperBound
-
-                                    }
-                                }
-
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                                globalValArray[k] = val0.description
-                        
-//                                print(globalValArray[k])
-                                return globalValArray[k]
-
-                            }
-                            k += 1
-                        }
-//                        print(returnValue)
-                        return returnValue.description
-                    }            //funcArray[i].returnValue = returnValue.description
-                }
+                searchWhile(script: funcArray[i].script, funcInstance: funcArray[i], word: "jump", range: funcArray[i].script.startIndex..<funcArray[i].script.endIndex, function: searchWhileFalls, funcWord: "")
+                
+                return funcArray[i].returnValue
             }
         }
         return ""
     }
     
-    
-    // グローバル変数だけ拾うようにすること、現在全ての変数を拾ってしまっている。
-    private func searchGloabalVar(script: String) {
+    private func searchWhileFalls(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
+
+        let end2 = range
+        guard let closeNL = script.range(of: "\n", options: .caseInsensitive, range: end2.upperBound..<script.endIndex) else {return range}
+        let returnRange = end2.upperBound..<closeNL.lowerBound
+        var returnValue = script[returnRange]
+        while let range = returnValue.range(of: " ") {
+           returnValue.replaceSubrange(range, with: "")
+        }
+        while let range = returnValue.range(of: "\"") {
+           returnValue.replaceSubrange(range, with: "")
+        }
+//                            nextRange2 = closeNL.upperBound..<script.endIndex
+        if returnValue.description != "" {
+            for v in globalVarArray {
+                if v == returnValue {
+
+            
+                        let nextRange3 = script.startIndex..<script.endIndex
+                        var begin010 = script[nextRange3].startIndex
+                        while let begin01 = script[nextRange3].range(of: v, options: .caseInsensitive, range: begin010..<script[nextRange3].endIndex) {
+                            
+
+                            guard let arithmetic = script[nextRange3].range(of: "+=", options: .caseInsensitive, range: begin01.upperBound..<script[nextRange3].endIndex) else {break}
+                            guard let nl = script[nextRange3].range(of: "\n", options: .caseInsensitive, range: arithmetic.upperBound..<script[nextRange3].endIndex) else {break}
+                            var value = script[nextRange3][arithmetic.upperBound..<nl.lowerBound]
+                            while let range = value.range(of: " ") {
+                                value.replaceSubrange(range, with: "")
+                            }
+
+                            funcInstance.globalInt += Int(value.description)!
+                            begin010 = nl.upperBound
+
+                        }
+            
+            
+            
+            
+            
+                }
+            }
+            funcInstance.returnVar = returnValue.description
+            var l = 0
+            for v in globalVarArray {
+                if funcInstance.returnVar == v {
+                    funcInstance.returnValue = funcInstance.globalInt.description
+                }
+                l += 1
+            }
+        }
+
+        return range
+    }
+ 
+ 
+    private func searchWhileGlobalVar(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
         
-        var begin010 = script.startIndex
-        while let begin01 = script.range(of: "var", options: .caseInsensitive, range: begin010..<script.endIndex) {
-            guard let end1 = script.range(of: "=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {return}
+        let begin01 = range
+            guard let end1 = script.range(of: "=", options: .caseInsensitive, range: begin01.upperBound..<script.endIndex) else {return range}
             let varRange = begin01.upperBound..<end1.lowerBound
             var variable = script[varRange]
 
@@ -175,7 +177,7 @@ public class Rabbit {
             
             
 
-            guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return}
+            guard let nl1 = script.range(of: "\n", options: .caseInsensitive, range: end1.upperBound..<script.endIndex) else {return range}
             let valRange = end1.upperBound..<nl1.lowerBound
             var value = script[valRange].description
             while let range = value.range(of: " ") {
@@ -193,108 +195,97 @@ public class Rabbit {
 
             }
             globalValArray.append(value)
-            begin010 = nl1.upperBound
-        }
 
-        // グローバル変数確認用
-//        var i = 0
-//        for gVar in globalVarArray {
-//            print(gVar + "!" + globalValArray[i])
-//            i += 1
-//        }
+        
+        return range
     }
     
-    private func searchFunc(script: String) {
+    private func searchWhileFunc(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
+        
         var nextRange0 = script.startIndex..<script.endIndex
-        // scriptの中からfuncを検索
-        while let begin0 = script.range(of: "func", options: .caseInsensitive, range: nextRange0) {
-            nextRange0 = begin0.upperBound..<script.endIndex
-            // funcの後ろに "(" があるか検索
-            guard var end0 = script.range(of: "(", options: .caseInsensitive, range: nextRange0) else {break}
-            // funcと(の間にある文字列が関数名になる
-            let funcRange = begin0.upperBound..<end0.lowerBound
-            var function = script[funcRange]
+        let begin0 = range
+        nextRange0 = begin0.upperBound..<script.endIndex
+        // funcの後ろに "(" があるか検索
+        guard var end0 = script.range(of: "(", options: .caseInsensitive, range: nextRange0) else {return range}
+        // funcと(の間にある文字列が関数名になる
+        let funcRange = begin0.upperBound..<end0.lowerBound
+        var function = script[funcRange]
 
-            while let range = function.range(of: " ") {
-                function.replaceSubrange(range, with: "")
+        while let range = function.range(of: " ") {
+            function.replaceSubrange(range, with: "")
+        }
+
+        let func0: Func = Func()
+        func0.function = function.description
+
+        nextRange0 = end0.upperBound..<script.endIndex
+        // "(" の後ろに ")" があるか検索
+        guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: nextRange0) else {return range}
+        // "(" と ")" の間にある文字列が引数になる
+        let argumentRange = end0.upperBound..<closeBracket.lowerBound
+        let argument = script[argumentRange]
+        var argumnetBegin = argument.startIndex
+        var flag: Bool = true
+        
+        if !(argument == "" || argument == " ") {
+            // 引数の中で "," があるか検索
+            while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
+                // "," があれば引数の１つとしてFuncクラスの引数配列に登録
+                let argument0 = argumnetBegin..<argumentEnd.lowerBound
+                var argument00 = argument[argument0]
+                while let range = argument00.range(of: " ") {
+                    argument00.replaceSubrange(range, with: "")
+                }
+                func0.argument.append(argument00.description)
+                argumnetBegin = argumentEnd.upperBound
+                flag = false
             }
+            if flag == true {
+                func0.argument.append(argument.description)
+            } else {
+                var arg = argument[argumnetBegin..<argument.endIndex]
+                while let range = arg.range(of: " ") {
+                   arg.replaceSubrange(range, with: "")
+                }
+                func0.argument.append(arg.description)
 
-            let func0: Func = Func()
-            func0.function = function.description
+            }
+        }
+        // 関数の中身を取得
+        guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {return range}
 
-            nextRange0 = end0.upperBound..<script.endIndex
-            // "(" の後ろに ")" があるか検索
-            guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: nextRange0) else {break}
-            // "(" と ")" の間にある文字列が引数になる
-            let argumentRange = end0.upperBound..<closeBracket.lowerBound
-            let argument = script[argumentRange]
-            var argumnetBegin = argument.startIndex
-            var flag: Bool = true
+        var bracket1 = end0
+        var count = 0
+        while count >= 0 {
             
-            if !(argument == "" || argument == " ") {
-                // 引数の中で "," があるか検索
-                while let argumentEnd = argument.range(of: ",", options: .caseInsensitive, range: argumnetBegin..<argument.endIndex) {
-                    // "," があれば引数の１つとしてFuncクラスの引数配列に登録
-                    let argument0 = argumnetBegin..<argumentEnd.lowerBound
-                    var argument00 = argument[argument0]
-                    while let range = argument00.range(of: " ") {
-                        argument00.replaceSubrange(range, with: "")
-                    }
-                    func0.argument.append(argument00.description)
-                    argumnetBegin = argumentEnd.upperBound
-                    flag = false
-                }
-                if flag == true {
-                    func0.argument.append(argument.description)
-                } else {
-                    var arg = argument[argumnetBegin..<argument.endIndex]
-                    while let range = arg.range(of: " ") {
-                       arg.replaceSubrange(range, with: "")
-                    }
-                    func0.argument.append(arg.description)
-
-                }
+            guard let bracket31 = script.range(of: "{", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
+            guard let bracket32 = script.range(of: "}", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
+            if bracket31.upperBound < bracket32.upperBound {
+                count += 1
+                end0 = bracket31
+                bracket1 = end0
+            } else {
+                count -= 1
+                end0 = bracket32
+                bracket1 = end0
             }
-            // 関数の中身を取得
-            guard let bracket0 = script.range(of: "{", options: .caseInsensitive, range: nextRange0) else {break}
-//            guard var bracket1 = script.range(of: "}", options: .caseInsensitive, range: nextRange0) else {break}
-//            var bracket00 = bracket0
-
-            var bracket1 = end0
-            var count = 0
-            while count >= 0 {
-//                let bracket2 = script.range(of: "{", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) {
-//                end0 = bracket2
-//                bracket0 = end0
-//                count += 1
-                
-                guard let bracket31 = script.range(of: "{", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
-                guard let bracket32 = script.range(of: "}", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
-                if bracket31.upperBound < bracket32.upperBound {
-                    count += 1
-                    end0 = bracket31
-                    bracket1 = end0
-                } else {
-                    count -= 1
-                    end0 = bracket32
-                    bracket1 = end0
-                }
 //                print("count:" + count.description)
 
-                if count <= 0 {
-                    break
-                }
+            if count <= 0 {
+                break
             }
-            if count >= 1 {
-                guard let bracket32 = script.range(of: "}", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {break}
-                bracket1 = bracket32
-            }
-            let bracketRange = bracket0.upperBound..<bracket1.lowerBound
-            func0.script = script[bracketRange].description
-            funcArray.append(func0)
         }
-    }
+        if count >= 1 {
+            guard let bracket32 = script.range(of: "}", options: .caseInsensitive, range: end0.upperBound..<script.endIndex) else {return range}
+            bracket1 = bracket32
+        }
+        let bracketRange = bracket0.upperBound..<bracket1.lowerBound
+        func0.script = script[bracketRange].description
+        funcArray.append(func0)
 
+        return bracket0
+    }
+    
     private func searchWhileReturn(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
         guard let nl = funcInstance.script.range(of: "\n", options: .caseInsensitive, range: range.upperBound..<funcInstance.script.endIndex) else {return range}
         let returnRange = range.upperBound..<nl.lowerBound
@@ -309,7 +300,7 @@ public class Rabbit {
         return nl.upperBound..<funcInstance.script.endIndex
     }
     
-    private func searchWhileFunc(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
+    private func searchWhileFuncName(script: String, funcInstance: Func, word: String, range: Range<String.Index>) -> Range<String.Index> {
         // 関数名と"("があった場合、 ")"を検索
         guard let closeBracket = script.range(of: ")", options: .caseInsensitive, range: range.upperBound..<script.endIndex) else {
             return range}
@@ -354,19 +345,10 @@ public class Rabbit {
             searchWhile(script: funcArray[i].script, funcInstance: funcArray[i], word: "return", range: funcArray[i].script.startIndex..<funcArray[i].script.endIndex, function: searchWhileReturn, funcWord: "")
             
             
-            searchWhile(script: script, funcInstance: funcArray[i], word: funcArray[i].function + "(", range: script.startIndex..<script.endIndex, function: searchWhileFunc, funcWord: "")
+            searchWhile(script: script, funcInstance: funcArray[i], word: funcArray[i].function + "(", range: script.startIndex..<script.endIndex, function: searchWhileFuncName, funcWord: "")
         }
     }
     
-    private func searchElement() {
-    }
-    
-    private func elementParse() {
-    }
-    
-    private func exec() {
-        
-    }
     private func searchWhile(script: String, funcInstance: Func, word: String, range: Range<String.Index>, function: (String, Func, String, Range<String.Index>) -> Range<String.Index>, funcWord: String) {
         var nextRange = range
         while let end = script.range(of: word, options: .caseInsensitive, range: nextRange) {
